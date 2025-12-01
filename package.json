@@ -1,0 +1,10 @@
+{
+  "name": "mee-engine-api",
+  "version": "1.0.0",
+  "description": "Backend API for My Emotional Engine (M.E.E.)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node api/run-simulation.js"
+  },
+  "dependencies": {}
+}
