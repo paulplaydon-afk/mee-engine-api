@@ -1,14 +1,24 @@
 // api/run-simulation.js
 // Dummy MEE Engine endpoint for wiring & testing
+// Now with browser access enabled (so Lovable can call it)
 
 export default function handler(req, res) {
-  // Allow only POST for now
+  // Allow your frontend to talk to this function
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // Handle preflight checks from the browser
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
+  // Only allow POST for real requests
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed. Use POST." });
   }
 
   const body = req.body || {};
-
   console.log("Incoming simulation request:", body);
 
   // For now, ignore the actual content and return fixed dummy data
