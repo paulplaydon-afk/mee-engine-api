@@ -3,26 +3,21 @@
 // CORS enabled for all responses
 
 export default function handler(req, res) {
-  // Small helper so we never forget CORS headers
-  const setCors = () => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  };
+  // Always set CORS headers on every response
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Max-Age", "86400");
 
   // Handle preflight (browser check before the real POST)
   if (req.method === "OPTIONS") {
-    setCors();
     return res.status(200).end();
   }
 
-  // Reject non-POST methods (but still send CORS headers)
+  // Reject non-POST methods
   if (req.method !== "POST") {
-    setCors();
     return res.status(405).json({ error: "Method not allowed. Use POST." });
   }
-
-  setCors(); // real POST request → also gets CORS
 
   const body = req.body || {};
   console.log("Incoming simulation request:", body);
