@@ -1,27 +1,33 @@
 // api/run-simulation.js
 // Dummy MEE Engine endpoint for wiring & testing
-// Now with browser access enabled (so Lovable can call it)
+// CORS enabled for all responses
 
 export default function handler(req, res) {
-  // Allow your frontend to talk to this function
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  // Small helper so we never forget CORS headers
+  const setCors = () => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  };
 
-  // Handle preflight checks from the browser
+  // Handle preflight (browser check before the real POST)
   if (req.method === "OPTIONS") {
+    setCors();
     return res.status(200).end();
   }
 
-  // Only allow POST for real requests
+  // Reject non-POST methods (but still send CORS headers)
   if (req.method !== "POST") {
+    setCors();
     return res.status(405).json({ error: "Method not allowed. Use POST." });
   }
+
+  setCors(); // real POST request → also gets CORS
 
   const body = req.body || {};
   console.log("Incoming simulation request:", body);
 
-  // For now, ignore the actual content and return fixed dummy data
+  // Dummy data for wiring
   const dummyResponse = {
     paths: {
       A: "Path A — example text showing a grounded, intentional response.",
